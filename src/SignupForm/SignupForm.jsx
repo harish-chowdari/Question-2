@@ -13,45 +13,60 @@ const SignupForm = () => {
         password:""
     })
 
-    const [error,setError] = React.useState("")
+    const [error,setError] = React.useState({
+        email:"",
+        password:""
+    })
+
+    const isValidEmail = ()=>{
+        const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return pattern.test(userDetails.email)
+    }
+    
 
     const changeHandler = (e)=>{
         setUserDetails({...userDetails,[e.target.name]:e.target.value})
-        setError("")
+     
+        
+        if (e.target.name === 'password') 
+        {
+            if (e.target.value.length < 8) 
+            {
+                setError({...error, password: "Password must be at least 8 characters"})
+            } 
+            
+            else 
+            {
+                setError({...error, password: ""})
+            }
+        }
+
+        else if(e.target.name === 'email' )
+        {
+            if(!isValidEmail()) 
+            {
+                setError({...error, email: "Enter a valid email address"})
+            }
+            else
+            {
+                setError({...error, [e.target.name]: ""})
+            }
+
+        }
+        else {
+            setError({...error, [e.target.name]: ""})
+        }
+
+
     }
+
+
+    
 
     const submitHandler = (e)=>{
-
-        let isValid = true
-        const errorMessages = {}
-        
-
-        try{
-            if(!userDetails.email)
-            {
-                errorMessages.email= "enter valid email address"
-            }
-            
-            else if(!userDetails.password || userDetails.password < 8)
-            {
-                setError("password must be at least 8 characters")
-            }
-
-            else if(isValid)
-            {
-
-            }
-                e.preventDefault()
-                console.log(userDetails)
-            
-        }
-
-        catch(error)
-        {
-            console.log(error)
-        }
+        e.preventDefault()
+        console.log("form submitted :",userDetails)
     }
-
 
   return (
     <div className='signup-container'>
@@ -64,10 +79,11 @@ const SignupForm = () => {
                   name='email'
                   value={userDetails.email}
                   onChange={changeHandler}
+                  autoComplete="off"
                  />
             </label>
 
-            {error && <p className="error-message">{error}</p>}
+            {error.email && <p className="error-message">{error.email}</p>}
 
             <label htmlFor='name-field'>
                 <input type='text' id='name-field'
@@ -75,11 +91,9 @@ const SignupForm = () => {
                   name='name'
                   value={userDetails.name}
                   onChange={changeHandler}
+                  autoComplete="off"
                  />
             </label>
-
-            {error && <p className="error-message">{error}</p>}
-
 
             <label htmlFor='country-field'>
                 <input type='text' id='country-field'
@@ -87,6 +101,7 @@ const SignupForm = () => {
                   name='country'
                   value={userDetails.country}
                   onChange={changeHandler}
+                  autoComplete="off"
                  />
             </label>
 
@@ -96,6 +111,7 @@ const SignupForm = () => {
                   name='age'
                   value={userDetails.age}
                   onChange={changeHandler}
+                  autoComplete="off"
                  />
             </label>
 
@@ -105,9 +121,12 @@ const SignupForm = () => {
                   name='password'
                   value={userDetails.password}
                   onChange={changeHandler}
+                  autoComplete="off"
                  />
             </label>
-            <button>Submit</button>
+            {error.password && <p className="error-message">{error.password}</p>}
+
+            <button disabled={!isValidEmail() || userDetails.password.length < 8}>Submit</button>
         </form>
     
     </div>

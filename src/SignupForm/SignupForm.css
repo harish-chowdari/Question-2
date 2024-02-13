@@ -11,3 +11,13 @@
     flex-direction: column;
     gap: 20px;
 }
+
+.error-message{
+    color: red;
+    margin: 0px;
+    width: 180px;
+}
+
+button{
+    width: 60px;
+}
